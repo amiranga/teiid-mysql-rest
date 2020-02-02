@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<vdb name="sample" version="1">    
+    <property name="{http://teiid.org/rest}auto-generate" value="true"/>
+    <property name="{http://teiid.org/rest}security-type" value="none"/>
+ 
+    <model name="myDB"  type="PHYSICAL">
+        <property name="importer.useFullSchemaName" value="true"/>
+        <property name="importer.schemaPattern" value="myDB"/>
+        <property name="importer.tableTypes" value="TABLE,VIEW"/>
+        <source name="mysqlDS" translator-name="mysql" connection-jndi-name="java:jboss/datasources/mysql-ds"/>
+    </model>
+    <model name="view" type ="VIRTUAL">
+            <metadata type="DDL"><![CDATA[
+            SET NAMESPACE 'http://teiid.org/rest' AS REST;
+                CREATE VIRTUAL PROCEDURE GetEmployees(IN name string)
+                RETURNS (json clob) OPTIONS (UPDATECOUNT 0, "REST:METHOD" 'GET', "REST:URI" 'get_employees')
+
+                AS
+                BEGIN
+                    execute immediate
+                    'SELECT JSONOBJECT(
+                        JSONARRAY_AGG(
+                            JSONOBJECT(
+                              id,
+                              name
+                            )
+                        ) as "data"
+                    ) as json FROM(
+                        SELECT id,
+							name
+                        FROM myDB.Employee
+                    ) A';
+                END
+
+            ]]> </metadata>
+    </model>
+ 
+</vdb>
