@@ -5,7 +5,7 @@ Guide to setup Teiid in standalone mode and create rest api to query from mysql 
 ## Prerequisite
 
 * Java 8
-* mysql
+* Mysql
 
 ## Installation
 
@@ -50,24 +50,24 @@ sudo mkdir -p <jboss-install>/module/system/layers/base/com/mysql/main
   </statement>
 </datasource>
 ```
-(you can change the username/password in datasource)
+( Update datasource with your mysql username and password )
 
 * To Install Teiid using CLI script, run
 ```bash
 <jboss-install>/bin/standalone.sh
 ```
-then in a separate console window execute
+Then in a separate console window execute
 
 ```bash
 <jboss-install>/bin/jboss-cli.sh --file=bin/scripts/teiid-standalone-mode-install.cli
 ```
-this will install Teiid subsystem into the running configuration of the JBoss AS in standalone mode.
+This will install Teiid subsystem into the running configuration of the JBoss AS in standalone mode.
 
 * Create a management user by running `<jboss-install>/bin/add0user.sh`. 
 
 ## Deploy the VDB
 
-* create a table in local mysql database to query
+* Create a table in local mysql database to query
 ```sql
 CREATE TABLE `Employee` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -78,12 +78,12 @@ CREATE TABLE `Employee` (
 INSERT INTO `Employee` VALUES (1,'Jessie'),(2,'Walter'),(3,'Skyler');
 ``` 
 
-* deploy the [my-vdb.xml](my-vdb.xml) file using following command. (Provide the username and password of the user created above)
+* Deploy the [my-vdb.xml](my-vdb.xml) file using following command. (Provide the username and password of the user created above)
 ```bash
 ./<jboss-install>/bin/jboss-cli.sh -c controller=localhost --user=admin --password=admin --command="deploy my-vdb.xml"
 ```
 
-* open a browser and go to http://localhost:8080/sample_1/View/get_employees. It will return a json
+* Open a browser and go to http://localhost:8080/sample_1/View/get_employees. It will return following json
 
 ```json
 {

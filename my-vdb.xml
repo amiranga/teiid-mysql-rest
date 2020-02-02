@@ -26,8 +26,7 @@
                             )
                         ) as "data"
                     ) as json FROM(
-                        SELECT id,
-							name
+                        SELECT id, name
                         FROM myDB.Employee
                     ) A';
                 END
